@@ -10,3 +10,5 @@ public class SpawnOptionsSignal : Signal<List<Option>> { }
 public class GetChildrenSignal : Signal<Option> { }
 
 public class OptionSelectedSignal : Signal<string> { }
+
+public class ClearOptionsSignal : Signal { }

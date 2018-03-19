@@ -16,21 +16,19 @@ public class WarSimContext : MVCSContext
 
     mediationBinder.Bind<StartButtonView>().To<StartButtonMediator>();
     mediationBinder.Bind<OptionView>().To<OptionMediator>();
+    mediationBinder.Bind<OptionsPanelView>().To<OptionsPanelMediator>();
 
     NetworkService networkService = GameObject.FindGameObjectWithTag("NetworkHelper").GetComponent<NetworkService>();
     injectionBinder.Bind<NetworkService>().ToValue(networkService);
 
-    OptionsManager gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<OptionsManager>();
-    injectionBinder.Bind<OptionsManager>().To(gameManager);
+    OptionsManager optionsManager = GameObject.FindGameObjectWithTag("OptionsManager").GetComponent<OptionsManager>();
+    injectionBinder.Bind<OptionsManager>().To(optionsManager);
+
+    injectionBinder.Bind<SpawnOptionsSignal>().ToSingleton();
+    injectionBinder.Bind<ClearOptionsSignal>().ToSingleton();
 
     commandBinder.Bind<StartSignal>().To<GetInitialTurnCommand>();
-    commandBinder.Bind<SpawnOptionsSignal>().To<SpawnOptionsCommand>();
     commandBinder.Bind<GetChildrenSignal>().To<GetChildrenCommand>();
     commandBinder.Bind<OptionSelectedSignal>().To<SelectOptionCommand>();
-  }
-
-  public override void Launch()
-  {
-    base.Launch();
   }
 }

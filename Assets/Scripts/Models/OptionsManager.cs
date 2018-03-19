@@ -8,10 +8,6 @@ using UnityEngine.UI;
 public class OptionsManager : MonoBehaviour
 {
 
-  public Button optionButton;
-
-  public RectTransform optionsPanel;
-
   public List<string> actionsTaken;
 
   [HideInInspector]
@@ -20,16 +16,22 @@ public class OptionsManager : MonoBehaviour
   [HideInInspector]
   public Signal<List<string>> ImpactOptionSelected = new Signal<List<string>>();
 
+  [HideInInspector]
+  public Signal<List<Option>> SpawnOptions = new Signal<List<Option>>();
+
+  [HideInInspector]
+  public Signal ClearOptions = new Signal();
+
   void Start()
   {
     DontDestroyOnLoad(this);
   }
 
-  public void OptionSelected(string type)
+  public void OptionSelected(string id)
   {
-    actionsTaken.Add(type);
+    actionsTaken.Add(id);
     List<Option> options = allOptions.data;
-    Option selectedOption = options.Find(option => option.name == type);
+    Option selectedOption = options.Find(option => option._id == id);
     if (selectedOption.isLeaf)
     {
       Debug.Log("Network Call");
@@ -37,35 +39,9 @@ public class OptionsManager : MonoBehaviour
     }
     else
     {
-      List<Option> children = new List<Option>();
-      selectedOption.children.ForEach((child) =>
-      {
-        Option childOption = options.Find(option => option.name == child);
-        children.Add(childOption);
-      });
-      SpawnOptions(children);
+      List<Option> children = options.FindAll((option) => option.parent == selectedOption._id);
+      ClearOptions.Dispatch();
+      SpawnOptions.Dispatch(children);
     }
-  }
-
-  private void ResetOptions()
-  {
-    foreach (Transform child in optionsPanel)
-    {
-      Destroy(child.gameObject);
-    }
-  }
-
-  public void SpawnOptions(List<Option> options)
-  {
-    ResetOptions();
-    options.ForEach((option) =>
-    {
-      Button spawnedButton = GameObject.Instantiate(optionButton, Vector3.zero, Quaternion.identity);
-      OptionView optionView = spawnedButton.GetComponent<OptionView>();
-      optionView.SetProperties(option.name, option.name);
-      RectTransform buttonTransform = spawnedButton.GetComponent<RectTransform>();
-      buttonTransform.SetParent(optionsPanel);
-      buttonTransform.SetPositionAndRotation(optionsPanel.position, optionsPanel.rotation);
-    });
   }
 }

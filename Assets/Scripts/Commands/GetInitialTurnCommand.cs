@@ -15,6 +15,9 @@ public class GetInitialTurnCommand : Command
   [Inject]
   public SpawnOptionsSignal spawnOptionsSignal { get; set; }
 
+    [Inject]
+  public ClearOptionsSignal clearOptionsSignal { get; set; }
+
   public override void Execute()
   {
     networkService.OptionsRecievedSignal.AddListener(SetInitialOptions);
@@ -25,6 +28,7 @@ public class GetInitialTurnCommand : Command
   {
     gameManager.allOptions = options;
     List<Option> parentOptions = options.data.FindAll(option => option.parent == null);
+    clearOptionsSignal.Dispatch();
     spawnOptionsSignal.Dispatch(parentOptions);
   }
 }

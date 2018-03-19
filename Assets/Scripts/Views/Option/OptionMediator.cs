@@ -14,6 +14,6 @@ public class OptionMediator : Mediator
 
   public override void OnRegister()
   {
-    optionView.OptionClickedSignal.AddListener( (string type) => optionSelectedSignal.Dispatch(type));
+    optionView.OptionClickedSignal.AddListener( (string id) => optionSelectedSignal.Dispatch(id));
   }
 }

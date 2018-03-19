@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 public class OptionView : View {
 
-  public string type {get; set;}
+  public string id {get; set;}
 
   public Text textUI;
 
@@ -21,11 +21,11 @@ public class OptionView : View {
   }
 
   public void OnOptionClick() {
-    OptionClickedSignal.Dispatch(type);
+    OptionClickedSignal.Dispatch(id);
   }
 
-  public void SetProperties (string text, string type) {
+  public void SetProperties (string text, string id) {
     this.textUI.text = text;
-    this.type = type;
+    this.id = id;
   }
 }
